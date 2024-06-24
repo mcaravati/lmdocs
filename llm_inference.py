@@ -1,4 +1,4 @@
-from constants import MAX_TOKENS, TEMPERATURE,STOP_TOKENS, OPENAI, LOCAL, TOK_COUNT, GROQ
+from constants import MAX_TOKENS, TEMPERATURE,STOP_TOKENS, LOCAL, TOK_COUNT, REMOTE
 from collections import Counter
 import logging
 import requests
@@ -54,26 +54,18 @@ def get_llm_api_output(url, headers, model, system_prompt, prompt, temperature, 
 
 
 def get_llm_output(system_prompt, prompt, mode, args):
-    if mode == OPENAI:
-        openai_key = args.openai_key if args.openai_key else os.environ[args.openai_key_env]
-        url = 'https://api.openai.com/v1/chat/completions'
+    if mode == REMOTE:
+        api_key = args.api_key if args.api_key else os.environ[args.api_key_env]
+        url = f'{args.api_base_url}/chat/completions'
         headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {openai_key}",
+            "Authorization": f"Bearer {api_key}",
         }
-        model = args.openai_model
+        model = args.model
     elif mode == LOCAL:
         url = f'http://localhost:{args.port}/v1/chat/completions'
         headers = {}
         model = 'dummy'
-    elif mode == GROQ:
-        groq_key = args.groq_key if args.groq_key else os.environ[args.groq_key_env]
-        url = 'https://api.groq.com/openai/v1/chat/completions'
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {groq_key}",
-        }
-        model = args.groq_model
     else:
         raise Exception(f'Unknown mode: `{mode}` for LLM inference')
     

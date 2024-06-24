@@ -11,9 +11,8 @@ CALLS_TO_INGORE = {
 MAX_TOKENS = 2048
 TEMPERATURE = 0.8
 STOP_TOKENS=['<|EOT|>', '<STOP>']
-OPENAI = 'openai'
 LOCAL = 'local'
-GROQ = 'groq'
+REMOTE = 'remote'
 
 TOK_COUNT = Counter({
         "prompt_tokens": 0,

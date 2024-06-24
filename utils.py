@@ -29,35 +29,24 @@ def get_args():
     )
 
     parser.add_argument(
-        "--openai_key",
-        help="Your Open AI key",
+        "--api_key",
+        help="Your API key for LLM inference",
     )
 
     parser.add_argument(
-        "--groq_key",
-        help="Your Groq key",
+        "--api_key_env",
+        help="Environment variable where your API key is stored",
     )
 
     parser.add_argument(
-        "--openai_key_env",
-        help="Environment variable where Open AI key is stored",
+        "--api_base_url",
+        default="https://api.openai.com/v1",
+        help="Base URL of the OpenAI-compatible API you wish to use. Default to 'https://api.openai.com/v1'"
     )
 
     parser.add_argument(
-        "--groq_key_env",
-        help="Environment variable where Groq key is stored",
-    )
-
-    parser.add_argument(
-        "--openai_model",
-        choices=['gpt-3.5-turbo', 'gpt-4-turbo', 'gpt-4o'],
-        help="Which openAI model to use. Supported models are ['gpt-3.5-turbo', 'gpt-4-turbo', 'gpt-4o']"
-    )
-
-    parser.add_argument(
-        "--groq_model",
-        choices=['gemma-7b-it', 'mixtral-8x7b-32768', 'llama3-70b-8192', 'llama3-8b-8192'],
-        help="Which Groq model to use. Supported models are ['gemma-7b-it', 'mixtral-8x7b-32768', 'llama3-70b-8192', 'llama3-8b-8192']"
+        "--model",
+        help="Which remote LLM model to use."
     )
 
     parser.add_argument(
@@ -107,14 +96,11 @@ def get_args():
 def verify_args(args):
     parser = argparse.ArgumentParser()
 
-    if not args.port and (not args.openai_key and not args.openai_key_env) and (not args.groq_key and not args.groq_key_env):
-        raise parser.error('Use --port for a local LLM or --openai_key/--openai_key_env for openAI LLMs')
+    if not args.port and (not args.api_key and not args.api_key_env):
+        raise parser.error('Use --port for a local LLM or --api_key/--api_key_env for remote LLM inference engine')
     
-    if not args.port and (args.openai_model and not (args.openai_key or args.openai_key_env)):
-        raise parser.error('One of --openai_key or --openai_key_env must be specified')
-
-    if not args.port and (args.groq_model and not (args.groq_key or args.groq_key_env)):
-        raise parser.error('One of --groq_key or --groq_key_env must be specified')
+    if not args.port and (args.model and not (args.api_key or args.api_key_env)):
+        raise parser.error('One of --api_key or --api_key_env must be specified')
 
 
 def generate_report(code_deps, report_path):
