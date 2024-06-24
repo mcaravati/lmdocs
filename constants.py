@@ -13,6 +13,7 @@ TEMPERATURE = 0.8
 STOP_TOKENS=['<|EOT|>', '<STOP>']
 OPENAI = 'openai'
 LOCAL = 'local'
+GROQ = 'groq'
 
 TOK_COUNT = Counter({
         "prompt_tokens": 0,
